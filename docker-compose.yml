@@ -1,0 +1,19 @@
+version: '3.7'
+services:
+  golang:
+    env_file:
+      - .env
+    build:
+      context: ./
+      target: production
+    image: golang:wrk-connector
+    command: go run src/main.go
+    restart: always
+    networks:
+      - web
+    ports:
+      - "4000:3000"
+
+networks:
+  web:
+    driver: bridge

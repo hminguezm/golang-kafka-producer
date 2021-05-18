@@ -1,0 +1,6 @@
+{
+  "name": "wrk-connector",
+  "version": "0.0.1",
+  "repository": "git@bitbucket.org:ripleyx/wrk-connector.git",
+  "license": "MIT"
+}

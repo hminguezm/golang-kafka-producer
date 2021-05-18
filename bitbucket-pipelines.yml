@@ -1,0 +1,55 @@
+image: node:10.15.3
+
+clone:
+  depth: full
+
+pipelines:
+  pull-requests:
+    feature/*:
+      - step:
+          size: 2x  # or configure at step level
+          caches:
+            - node
+            - sonar
+          services:
+            - docker
+          script:
+            - echo "running test coverage"
+            - go run test
+            - echo "Sonarcloud running ..."
+            - pipe: sonarsource/sonarcloud-scan:1.2.0
+            - pipe: sonarsource/sonarcloud-quality-gate:0.1.4
+
+  branches:
+    dev:
+      - step:
+          size: 2x
+          caches:
+            - node
+            - sonar
+          script:
+            - echo "running test coverage"
+            - go run test
+            - echo "Sonarcloud running ..."
+            - pipe: sonarsource/sonarcloud-scan:1.2.0
+            - pipe: sonarsource/sonarcloud-quality-gate:0.1.4
+
+    prod:
+      - step:
+          size: 2x
+          caches:
+            - node
+            - sonar
+          script:
+            - echo "running test coverage"
+            - go run test
+            - echo "Sonarcloud running ..."
+            - pipe: sonarsource/sonarcloud-scan:1.2.0
+            - pipe: sonarsource/sonarcloud-quality-gate:0.1.4
+
+definitions:
+  caches:
+    sonar: ~/.sonar/cache
+  services:
+    docker:
+      memory: 2048
