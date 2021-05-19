@@ -5,31 +5,23 @@ A Goland published.
 ## Requirements
 
 ```text
-  - GNU Make ~>4.3
+  - Yarn
   - dotenv-cli (by local stage)
   - Go ~>1.13
   - Docker ~>18
   - Docker compose ~>1.28.0 (Optional)
 ```
 
-### **Configuration**
-
-```shell
-  make config project-name=<name>
-```
-
-Note: This creates the initializer configuration, and a .env file with basic variables
-
 # Running in local stage, default port: 3000
 
 ```shell
-make start
+yarn run start:dev
 ```
 
 ### with dotenv-cli
 
 ```shell
-dotenv -e .env make start
+dotenv -e .env yarn run start:dev
 ```
 
 # Running with Docker, default port: 4000

@@ -1,14 +1,16 @@
 FROM golang:alpine AS base
 ENV GO111MODULE="on"
-RUN apk add --no-cache ca-certificates git
 
 FROM base AS development
+RUN apk update \
+  && apk add --no-cache ca-certificates git \
+  && apk add --no-cache ca-certificates yarn
 ENV APP_HOME /usr/src/app
 RUN mkdir -p $APP_HOME
 WORKDIR $APP_HOME
 COPY . $APP_HOME
 EXPOSE 3000
-CMD ["make", "start"]
+CMD ["yarn", "run", "start:dev"]
 
 # Go image for building the project
 FROM development as builder

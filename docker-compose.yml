@@ -1,19 +1,24 @@
-version: '3.7'
+version: '3.8'
 services:
   golang:
+    container_name: wrk-connector
+    image: golang:wrk-connector
     env_file:
       - .env
     build:
       context: ./
-      target: production
-    image: golang:wrk-connector
-    command: go run src/main.go
+      target: development
+    working_dir: /app
+    volumes:
+      - ./:/app
+    command: yarn run start:dev
     restart: always
     networks:
-      - web
+      - default
     ports:
       - "4000:3000"
 
 networks:
-  web:
-    driver: bridge
+  default:
+    external:
+      name: backend-network
