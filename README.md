@@ -32,7 +32,6 @@ dotenv -e .env yarn run start:dev
 docker-compose -f docker-compose.yml up -d --build
 ```
 
-
 ## A new container every time and then log output (debug):
 
 ```shell
