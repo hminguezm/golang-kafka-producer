@@ -7,7 +7,10 @@ import (
   "net/http"
   "os"
   "time"
+  useCase "wrk-connector/src/product/application/use-case"
+  "wrk-connector/src/register/infrastructure/persistence/postgres"
   log "wrk-connector/src/shared/infrastructure/config"
+  "wrk-connector/src/shared/infrastructure/config/persistence/gorm"
   version "wrk-connector/src/version/application/use_case"
 )
 
@@ -18,6 +21,12 @@ func main() {
   e.HideBanner = true
   version.NewHealthHandler(e)
 
+  postgresConnect := gorm.NewPostgresConnection()
+  registerRepo := postgres.NewRegisterRepository(postgresConnect)
+
+  sendToCreateProduct := useCase.NewSendToCreate(registerRepo)
+  _ = sendToCreateProduct.Do()
+
   log.Info("Starting server...")
   portServer := os.Getenv("PORT_SERVER")
   server := &http.Server{
@@ -27,4 +36,6 @@ func main() {
   }
 
   e.Logger.Fatal(e.StartServer(server))
+
+
 }

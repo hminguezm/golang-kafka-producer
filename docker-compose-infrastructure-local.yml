@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:12.3-alpine
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "postgres", "-U", "root" ]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+    restart: always
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=transaction
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    networks:
+      - default
+
+volumes:
+  postgres:
+
+networks:
+  default:
+    external:
+      name: db-network
