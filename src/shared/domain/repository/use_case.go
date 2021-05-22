@@ -1,5 +1,5 @@
 package repository
 
 type UseCaseBase interface {
-  Do() error
+	Do() error
 }

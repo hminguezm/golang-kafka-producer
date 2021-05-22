@@ -20,6 +20,33 @@ services:
     networks:
       - default
 
+  zookeeper:
+    container_name: zookeeper
+    image: wurstmeister/zookeeper
+    hostname: zookeeper
+    restart: always
+    ports:
+      - "2181:2181"
+    networks:
+      - default
+    environment:
+      ZOO_MY_ID: 1
+
+  kafka:
+    container_name: kafka
+    image: wurstmeister/kafka
+    ports:
+      - "9092:9092"
+    networks:
+      - kafka-network
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_MESSAGE_MAX_BYTES: 2000000
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+    volumes:
+      - ./:/var/run/docker.sock
+
 volumes:
   postgres:
 
@@ -27,3 +54,6 @@ networks:
   default:
     external:
       name: db-network
+  kafka-network:
+    external:
+      name: kafka-network
