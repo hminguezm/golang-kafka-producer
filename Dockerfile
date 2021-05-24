@@ -1,30 +1,36 @@
-FROM golang:alpine AS base
+FROM golang:alpine as builder
 ENV GO111MODULE="on"
-
-FROM base AS development
-RUN apk update \
-  && apk add --no-cache ca-certificates git \
-  && apk add --no-cache ca-certificates yarn
 ENV APP_HOME /usr/src/app
+
+RUN apk update && \
+    apk --no-cache add libaio libnsl libc6-compat curl git yarn gcc musl-dev
+
 RUN mkdir -p $APP_HOME
 WORKDIR $APP_HOME
 COPY . $APP_HOME
-EXPOSE 3000
-CMD ["yarn", "run", "start:dev"]
-
-# Go image for building the project
-FROM development as builder
-ENV APP_HOME /usr/src/app
 RUN go mod vendor
-RUN CGO_ENABLED=0 GOOS=linux go build -mod=vendor -a -installsuffix cgo -ldflags '-extldflags "-static"' $APP_HOME/src/main.go
+RUN go build -mod=vendor $APP_HOME/src/main.go
 
 # Runtime image with v container
-FROM scratch as production
+FROM oraclelinux:7-slim as production
+
+ARG release=19
+ARG update=3
 ARG VERSION
 ENV VERSION_APP=$VERSION
 ENV APP_HOME /usr/src/app
+
+# Oracle and Oracle Instant Client installation
+RUN yum -y install oracle-release-el7 && \
+    yum-config-manager --enable ol7_oracle_instantclient && \
+    yum -y install oracle-instantclient${release}.${update}-basic \
+    oracle-instantclient${release}.${update}-devel \
+    oracle-instantclient${release}.${update}-sqlplus && \
+    rm -rf /var/cache/yum
+
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=builder $APP_HOME/package.json /package.json
 COPY --from=builder $APP_HOME/main /src/
+RUN ls -alth
 
 ENTRYPOINT ["/src/main"]

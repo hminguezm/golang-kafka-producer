@@ -8,10 +8,18 @@ import (
 	"os"
 	"time"
 	useCase "wrk-connector/src/product/application/use-case"
-	"wrk-connector/src/register/infrastructure/persistence/postgres"
+	"wrk-connector/src/product/infrastructure/persistence/oracle"
+	// "wrk-connector/src/register/infrastructure/persistence/postgres"
 	log "wrk-connector/src/shared/infrastructure/config"
-	"wrk-connector/src/shared/infrastructure/config/persistence/gorm"
+	databaseSql "wrk-connector/src/shared/infrastructure/config/persistence/database-sql"
+	// "wrk-connector/src/shared/infrastructure/config/persistence/gorm"
+	_interface "wrk-connector/src/shared/infrastructure/config/persistence/interface"
 	version "wrk-connector/src/version/application/use_case"
+)
+
+const (
+	// ORACLE POSTGRES = "postgres"
+	ORACLE = "godror"
 )
 
 func main() {
@@ -21,10 +29,28 @@ func main() {
 	e.HideBanner = true
 	version.NewHealthHandler(e)
 
-	postgresConnect := gorm.NewPostgresConnection()
-	registerRepo := postgres.NewRegisterRepository(postgresConnect)
+	// postgresDbParameters := _interface.DbParameters{
+	// Host:     os.Getenv("POSTGRES_HOST"),
+	// Port:     os.Getenv("POSTGRES_PORT"),
+	// User:     os.Getenv("POSTGRES_USER"),
+	// Password: os.Getenv("POSTGRES_PASSWORD"),
+	// DbName:   os.Getenv("POSTGRES_DATABASE_NAME"),
+	// }
 
-	sendToCreateProduct := useCase.NewSendToCreate(registerRepo)
+	oracleDbParameters := _interface.DbParameters{
+		Host:     os.Getenv("ORACLE_DB_CONNECTOR_HOST"),
+		Port:     os.Getenv("ORACLE_DB_CONNECTOR_PORT"),
+		User:     os.Getenv("ORACLE_DB_CONNECTOR_USER"),
+		Password: os.Getenv("ORACLE_DB_CONNECTOR_PASSWORD"),
+		DbName:   os.Getenv("ORACLE_DB_CONNECTOR_DATABASE_NAME"),
+	}
+
+	oracleConnect := databaseSql.NewOracleConnection(ORACLE, oracleDbParameters)
+	// postgresConnect := gorm.NewConnection(POSTGRES, postgresDbParameters)
+
+	productRepo := oracle.NewProductRepository(oracleConnect)
+	// registerRepo := postgres.NewRegisterRepository(postgresConnect)
+	sendToCreateProduct := useCase.NewSendToCreate(productRepo)
 	_ = sendToCreateProduct.Do()
 
 	log.Info("Starting server...")

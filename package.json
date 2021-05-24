@@ -19,7 +19,7 @@
     "nodemon": "^2.0.7"
   },
   "scripts": {
-    "start:dev": "nodemon --watch 'src/**/*.go' --ignore 'src/**/*_[test]?$.ts' --exec go run src/main.go --signal SIGTERM",
+    "start:dev": "nodemon --watch 'src/**/*.go' --ignore 'src/**/*_[test]?$.ts' --exec go run src/main.go",
     "start:dev:full": "",
     "start": "",
     "lint": "gofmt -l -s -w .",
