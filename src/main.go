@@ -9,7 +9,12 @@ import (
 	"time"
 	useCase "wrk-connector/src/product/application/use-case"
 	"wrk-connector/src/product/infrastructure/persistence/oracle"
-	// "wrk-connector/src/register/infrastructure/persistence/postgres"
+  "wrk-connector/src/register/infrastructure/persistence/postgres"
+  "wrk-connector/src/shared/domain/constant"
+  "wrk-connector/src/shared/infrastructure/config/persistence/gorm"
+  "wrk-connector/src/shared/infrastructure/queue/kafka"
+
+  // "wrk-connector/src/register/infrastructure/persistence/postgres"
 	log "wrk-connector/src/shared/infrastructure/config"
 	databaseSql "wrk-connector/src/shared/infrastructure/config/persistence/database-sql"
 	// "wrk-connector/src/shared/infrastructure/config/persistence/gorm"
@@ -18,7 +23,7 @@ import (
 )
 
 const (
-	// ORACLE POSTGRES = "postgres"
+	POSTGRES = "postgres"
 	ORACLE = "godror"
 )
 
@@ -29,13 +34,13 @@ func main() {
 	e.HideBanner = true
 	version.NewHealthHandler(e)
 
-	// postgresDbParameters := _interface.DbParameters{
-	// Host:     os.Getenv("POSTGRES_HOST"),
-	// Port:     os.Getenv("POSTGRES_PORT"),
-	// User:     os.Getenv("POSTGRES_USER"),
-	// Password: os.Getenv("POSTGRES_PASSWORD"),
-	// DbName:   os.Getenv("POSTGRES_DATABASE_NAME"),
-	// }
+	postgresDbParameters := _interface.DbParameters{
+	 Host:     os.Getenv("POSTGRES_HOST"),
+	 Port:     os.Getenv("POSTGRES_PORT"),
+	 User:     os.Getenv("POSTGRES_USER"),
+	 Password: os.Getenv("POSTGRES_PASSWORD"),
+	 DbName:   os.Getenv("POSTGRES_DATABASE_NAME"),
+	 }
 
 	oracleDbParameters := _interface.DbParameters{
 		Host:     os.Getenv("ORACLE_DB_CONNECTOR_HOST"),
@@ -46,11 +51,15 @@ func main() {
 	}
 
 	oracleConnect := databaseSql.NewOracleConnection(ORACLE, oracleDbParameters)
-	// postgresConnect := gorm.NewConnection(POSTGRES, postgresDbParameters)
+	postgresConnect := gorm.NewConnection(POSTGRES, postgresDbParameters)
 
-	productRepo := oracle.NewProductRepository(oracleConnect)
-	// registerRepo := postgres.NewRegisterRepository(postgresConnect)
-	sendToCreateProduct := useCase.NewSendToCreate(productRepo)
+  producerMassage := kafka.NewKafkaProducer(kafka.GetDialer(), constant.KafkaBrokers...)
+
+  log.Info("NewKafkaProducer", producerMassage)
+
+	registerRepo := postgres.NewRegisterRepository(postgresConnect)
+  productRepo := oracle.NewProductRepository(oracleConnect)
+  sendToCreateProduct := useCase.NewSendToCreate(registerRepo, productRepo, producerMassage)
 	_ = sendToCreateProduct.Do()
 
 	log.Info("Starting server...")
@@ -60,7 +69,6 @@ func main() {
 		ReadTimeout:  3 * time.Minute,
 		WriteTimeout: 3 * time.Minute,
 	}
-
 	e.Logger.Fatal(e.StartServer(server))
 
 }

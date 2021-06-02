@@ -1,9 +1,11 @@
 package model
 
 import (
-	"github.com/jinzhu/gorm"
-	"github.com/satori/go.uuid"
-	"time"
+  "github.com/jinzhu/gorm"
+  "github.com/satori/go.uuid"
+  "time"
+  "wrk-connector/src/shared/domain/constant"
+  "wrk-connector/src/shared/domain/service"
 )
 
 type Register struct {
@@ -12,6 +14,9 @@ type Register struct {
 	UpdatedAt time.Time `json:"update_at"`
 }
 
-func (base *Register) BeforeCreate(scope *gorm.Scope) error {
-	return scope.SetColumn("ID", uuid.NewV4())
+func (base *Register) BeforeCreate(scope *gorm.Scope) (err error)  {
+  base.ID = uuid.NewV4()
+  base.UpdatedAt = service.ConvertToTime(time.Now().Format(constant.TimeFormat))
+
+  return
 }

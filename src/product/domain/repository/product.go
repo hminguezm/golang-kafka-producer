@@ -1,7 +1,9 @@
 package repository
 
-import "wrk-connector/src/product/infrastructure/persistence/oracle/model"
+import (
+  "wrk-connector/src/product/domain/entity"
+)
 
 type Product interface {
-	FindAll() ([]*model.Product, error)
+	FindToCreate(dateExec string) ([]*entity.Product, error)
 }
