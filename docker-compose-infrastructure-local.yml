@@ -6,7 +6,7 @@ services:
     hostname: zookeeper
     restart: always
     ports:
-      - "2181:2181"
+      - 2181:2181
     networks:
       - kafka-network
     environment:
@@ -39,41 +39,25 @@ services:
     environment:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=transaction
+      - POSTGRES_DB=db-conector-producer
     volumes:
       - postgres:/var/lib/postgresql/data
     ports:
       - 5432:5432
     networks:
-      - db-network
-
-  oracle:
-    container_name: oracle
-    image: daggerok/oracle:12.1.0.2-se
-    shm_size: 1g
-    environment:
-      ORACLE_SID: DBBPAGO
-      ORACLE_PWD: password
-      ORACLE_PDB: DBBPAGO
-      ORACLE_CHARACTERSET: AL32UTF8
-    ports:
-      - 1521:1521
-      - 5500:5500
-    volumes:
-      - "oracle-se-data:/opt/oracle/oradata"
-      - "./db-startup-migration-scripts:/opt/oracle/scripts/startup"
-      - "./db-setup-migration-scripts:/docker-entrypoint-initdb.d/setup"
-    networks:
-      - db-network
+      - default
+      - database-network
 
 volumes:
   postgres:
-  oracle-se-data: {}
 
 networks:
-  db-network:
+  default:
+    driver: bridge
+  database-network:
     external:
-      name: db-network
+      name: database-network
   kafka-network:
     external:
       name: kafka-network
+

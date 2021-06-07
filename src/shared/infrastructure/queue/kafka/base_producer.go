@@ -40,6 +40,7 @@ func (p *producer) getKafkaWriter(topic string) *kafka.Writer {
 			WriteTimeout:     10 * time.Second,
 		})
 	}
+
 	return p.kafkaWriters[topic]
 }
 

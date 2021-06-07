@@ -1,10 +1,10 @@
 package service
 
 import (
-	"encoding/json"
-	"reflect"
-	"strconv"
-	"time"
+  "encoding/json"
+  "reflect"
+  "strconv"
+  "time"
 )
 
 func ConvertToString(field interface{}) string {
@@ -76,14 +76,6 @@ func ConvertToTime(field interface{}) time.Time {
 	return time.Time{}
 }
 
-func EntityToJson(entity interface{}) string {
-	str, err := json.Marshal(entity)
-	if err != nil {
-		return "{}"
-	}
-	return string(str)
-}
-
 func IsNilFixed(i interface{}) bool {
 	if i == nil {
 		return true
@@ -93,4 +85,13 @@ func IsNilFixed(i interface{}) bool {
 		return reflect.ValueOf(i).IsNil()
 	}
 	return false
+}
+
+func EntityToJson(entity interface{}) string {
+  str, err := json.Marshal(entity)
+  if err != nil {
+    return "{}"
+  }
+
+  return string(str)
 }

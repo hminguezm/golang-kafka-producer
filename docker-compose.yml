@@ -7,25 +7,28 @@ services:
       - .env
     build:
       context: ./
-      target: development
-    working_dir: /app
-    volumes:
-      - ./:/app
-    command: yarn run start:dev
+      target: production
+    #command: go run src/main.go
+    #volumes:
+    # - ./:/app
     networks:
       - default
-      - db-network
+      - database-network
+      - backend-network
       - kafka-network
     ports:
-      - "4000:3000"
+      - 4000:3000
 
 networks:
   default:
+    driver: bridge
+  database-network:
+    external:
+      name: database-network
+  backend-network:
     external:
       name: backend-network
-  db-network:
-    external:
-      name: db-network
   kafka-network:
     external:
       name: kafka-network
+

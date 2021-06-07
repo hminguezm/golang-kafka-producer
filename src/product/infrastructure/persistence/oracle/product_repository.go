@@ -7,8 +7,8 @@ import (
   s "wrk-connector/src/product/domain/service"
   "wrk-connector/src/product/infrastructure/mapper"
   log "wrk-connector/src/shared/infrastructure/config"
-  _interface "wrk-connector/src/shared/infrastructure/config/persistence/database-sql/interface"
-  oracleDatabase "wrk-connector/src/shared/infrastructure/persistence/database-sql"
+	_interface "wrk-connector/src/shared/infrastructure/config/persistence/godror/interface"
+  oracleDatabase "wrk-connector/src/shared/infrastructure/persistence/godror"
 )
 
 type ProductRepository struct {

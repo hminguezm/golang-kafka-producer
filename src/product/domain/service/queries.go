@@ -2,7 +2,6 @@ package service
 
 import (
   "fmt"
-  log "wrk-connector/src/shared/infrastructure/config"
 )
 
 func GetProductToSendSql(lastExec string) string {
@@ -77,9 +76,6 @@ GROUP BY product_sku,
          created_at,
          updated_at,
          media`, lastExec)
-
-  log.Debug("lastExec: ", lastExec)
-  log.Debug("slq: ", slq)
 
   return slq
 }
