@@ -41,8 +41,7 @@ FROM (
          FROM CON_PRODUCTS cp
                   INNER JOIN CON_PRODUCT_ATTRIBUTE cpa ON cpa.PRODUCT_SKU = cp.PRODUCT_SKU
                   LEFT OUTER JOIN CON_OFFERS co ON co.CON_PRODUCT_PRODUCT_SKU = cp.PRODUCT_SKU
-         WHERE (cp.SYNC = 1)
-           AND (cp.CREATE_DATE >= to_date('%s', 'YYYY-MM-DD"T"HH24:MI:SS'))
+         WHERE (cp.CREATE_DATE >= to_date('%s', 'YYYY-MM-DD"T"HH24:MI:SS'))
            AND (cp.CREATE_DATE < SYSDATE)
          GROUP BY cp.PRODUCT_SKU,
                   cp.PRODUCT_SKU_PARENT,
