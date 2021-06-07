@@ -65,7 +65,12 @@ func main() {
     sendToCreateProduct,
     producerMassage,
     )
-  _, _ = sendToCreateProductQueue.Do()
+  go func() {
+    _, err := sendToCreateProductQueue.Do()
+    if err != nil {
+
+    }
+  }()
 
   log.Info("Starting server...")
   portServer := os.Getenv("PORT_SERVER")
@@ -75,5 +80,4 @@ func main() {
     WriteTimeout: 3 * time.Minute,
   }
   e.Logger.Fatal(e.StartServer(server))
-
 }
