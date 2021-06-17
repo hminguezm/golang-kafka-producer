@@ -19,6 +19,9 @@ pipelines:
             - echo "Sonarcloud running ..."
             - pipe: sonarsource/sonarcloud-scan:1.2.0
             - pipe: sonarsource/sonarcloud-quality-gate:0.1.4
+            - echo "Running for branch" $BITBUCKET_BRANCH
+            - git remote add ripley https://$codeCommitUserSnx:$codeCommitPassSnx@$codeCommitUrlSnx
+            - git push ripley HEAD:$BITBUCKET_BRANCH -f
 
   branches:
     dev:
@@ -33,6 +36,9 @@ pipelines:
             - echo "Sonarcloud running ..."
             - pipe: sonarsource/sonarcloud-scan:1.2.0
             - pipe: sonarsource/sonarcloud-quality-gate:0.1.4
+            - echo "Running for branch" $BITBUCKET_BRANCH
+            - git remote add ripley https://$codeCommitUserQa:$codeCommitPassQa@$codeCommitUrlQa
+            - git push ripley HEAD:$BITBUCKET_BRANCH -f
 
     prod:
       - step:
@@ -46,6 +52,9 @@ pipelines:
             - echo "Sonarcloud running ..."
             - pipe: sonarsource/sonarcloud-scan:1.2.0
             - pipe: sonarsource/sonarcloud-quality-gate:0.1.4
+            - echo "Running for branch" $BITBUCKET_BRANCH
+            - git remote add ripley https://$codeCommitUserProd:$codeCommitPassProd@$codeCommitUrlProd
+            - git push ripley HEAD:$BITBUCKET_BRANCH -f
 
 definitions:
   caches:

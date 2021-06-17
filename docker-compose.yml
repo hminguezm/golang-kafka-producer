@@ -1,24 +1,34 @@
 version: '3.8'
 services:
   golang:
-    container_name: wrk-conector
-    image: golang:wrk-conector
+    container_name: wrk-connector-producer
+    image: golang:wrk-conector-producer
     env_file:
       - .env
     build:
       context: ./
-      target: development
-    working_dir: /app
-    volumes:
-      - ./:/app
-    command: yarn run start:dev
-    restart: always
+      target: production
+    #command: go run src/main.go
+    #volumes:
+    # - ./:/app
     networks:
       - default
+      - database-network
+      - backend-network
+      - kafka-network
     ports:
-      - "4000:3000"
+      - 4000:3000
 
 networks:
   default:
+    driver: bridge
+  database-network:
+    external:
+      name: database-network
+  backend-network:
     external:
       name: backend-network
+  kafka-network:
+    external:
+      name: kafka-network
+

@@ -1,4 +1,4 @@
-# wrk-connector
+~~~~# wrk-connector-producer
 
 A Goland published.
 
@@ -36,6 +36,46 @@ docker-compose -f docker-compose.yml up -d --build
 
 ```shell
 docker-compose -f docker-compose.yml up -d --build --force-recreate; docker-compose -f docker-compose.yml logs -f
+```
+
+# PRODUCERS
+
+```dotenv
+TOPIC_PRODUCTS_CREATE
+```
+
+ex:
+
+```json
+{
+  "eventId": "4cbda00f-819f-453c-92ed-e0802fc20c5c",
+  "eventName": "PRODUCTS_CREATED",
+  "eventDataFormat": "JSON",
+  "type": "CREATED",
+  "timestamp": "2021-05-22T12:56:48",
+  "version": "1.0",
+  "country": "CL",
+  "origin": "wrk-connector-producer",
+  "payload": {}
+}
+```
+
+```dotenv
+TOPIC_PRODUCTS_UPDATE
+```
+
+```json
+{
+  "eventId": "4cbda00f-819f-453c-92ed-e0802fc20c5d",
+  "eventName": "PRODUCTS_CREATED",
+  "eventDataFormat": "JSON",
+  "type": "UPDATED",
+  "timestamp": "2021-05-22T12:56:48",
+  "version": "1.0",
+  "country": "CL",
+  "origin": "wrk-connector-producer",
+  "payload": {}
+}
 ```
 
 ## Reference Links
