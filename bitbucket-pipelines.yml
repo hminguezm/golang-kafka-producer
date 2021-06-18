@@ -36,8 +36,11 @@ pipelines:
             # - echo "Sonarcloud running ..."
             # - pipe: sonarsource/sonarcloud-scan:1.2.0
             # - pipe: sonarsource/sonarcloud-quality-gate:0.1.4
+            - echo "Installing  jq ..."
+            - apt-get update && apt-get install jq -y
+            - urlencodedPass=$(echo $codeCommitPassQa | jq -R -r @uri)
             - echo "Running for branch" $BITBUCKET_BRANCH
-            - git remote add ripley https://$codeCommitUserQa:$codeCommitPassQa@$codeCommitUrlQa
+            - git remote add ripley https://$codeCommitUserQa:$urlencodedPas@$codeCommitUrlQa
             - git push ripley HEAD:$BITBUCKET_BRANCH -f
 
     prod:
