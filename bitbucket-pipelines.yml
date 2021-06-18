@@ -8,9 +8,9 @@ pipelines:
     feature/*:
       - step:
           size: 2x
-          caches:
-            - node
-            - sonar
+         # caches:
+           # - node
+           # - sonar
           services:
             - docker
           script:
@@ -27,9 +27,9 @@ pipelines:
     dev:
       - step:
           size: 2x
-          caches:
-            - node
-            - sonar
+         # caches:
+           # - node
+           # - sonar
           script:
             # - echo "running test coverage"
             # - go run test
@@ -43,9 +43,9 @@ pipelines:
     prod:
       - step:
           size: 2x
-          caches:
-            - node
-            - sonar
+         # caches:
+          #  - node
+          #  - sonar
           script:
             # - echo "running test coverage"
             # - go run test
@@ -57,8 +57,8 @@ pipelines:
             - git push ripley HEAD:$BITBUCKET_BRANCH -f
 
 definitions:
-  caches:
-    sonar: ~/.sonar/cache
+ # caches:
+  #  sonar: ~/.sonar/cache
   services:
     docker:
       memory: 2048
