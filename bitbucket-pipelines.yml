@@ -40,7 +40,7 @@ pipelines:
             - apt-get update && apt-get install jq -y
             - urlencodedPass=$(echo $codeCommitPassQa | jq -R -r @uri)
             - echo "Running for branch" $BITBUCKET_BRANCH
-            - git remote add ripley https://$codeCommitUserQa:$urlencodedPas@$codeCommitUrlQa
+            - git remote add ripley https://$codeCommitUserQa:$urlencodedPass@$codeCommitUrlQa
             - git push ripley HEAD:$BITBUCKET_BRANCH -f
 
     prod:
