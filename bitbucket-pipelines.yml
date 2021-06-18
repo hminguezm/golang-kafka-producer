@@ -37,7 +37,7 @@ pipelines:
             # - pipe: sonarsource/sonarcloud-scan:1.2.0
             # - pipe: sonarsource/sonarcloud-quality-gate:0.1.4
             - echo "Running for branch" $BITBUCKET_BRANCH
-            - git remote add ripley https://$codeCommitUserQa:$codeCommitPassQa@$codeCommitUrlQa
+            - git remote add ripley https://$codeCommitUserSnx:$codeCommitPassSnx@$codeCommitUrlSnx
             - git push ripley HEAD:$BITBUCKET_BRANCH -f
 
     prod:
