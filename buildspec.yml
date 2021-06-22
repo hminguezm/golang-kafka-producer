@@ -1,31 +1,23 @@
 version: 0.2
-env:
-  git-credential-helper: yes
 phases:
   pre_build:
     commands:
+      - echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
       - dockerd-entrypoint.sh
       - echo Logging in to Amazon ECR...
       - $(aws ecr get-login --no-include-email --region us-east-1)
-      - REPOSITORY_URI=${BUILD_REPOSITORY_URL}
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
-      - IMAGE_TAG=${COMMIT_HASH:=latest}
-      - echo Image Tag $IMAGE_TAG
+      - BUILD_IMAGE_TAG=${COMMIT_HASH:=latest}
+      - echo Image Tag $BUILD_IMAGE_TAG
   build:
     commands:
-      - env
-      - echo Repositorio AWS ECR $REPOSITORY_URI
+      - echo Repositorio AWS ECR $BUILD_REPOSITORY_URL
       - echo Build APP Started on `date`
-      - |
-        docker build \
-        -t $REPOSITORY_URI:$IMAGE_TAG \
-        --build-arg SSH_KEY \
-        --build-arg SSH_KNOWN_HOSTS \
-        --target production .
-      - docker tag $REPOSITORY_URI:$IMAGE_TAG $REPOSITORY_URI:latest
+      - docker build -t $BUILD_REPOSITORY_URL:$BUILD_IMAGE_TAG .
+      - docker tag $BUILD_REPOSITORY_URL:$BUILD_IMAGE_TAG $BUILD_REPOSITORY_URL:latest
       - echo Pushing the Docker images...
-      - docker push $REPOSITORY_URI:latest
-      - docker push $REPOSITORY_URI:$IMAGE_TAG
-      - printf '[{"name":"%s","imageUri":"%s"}]' ${BUILD_REPOSITORY_NAME} $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+      - docker push $BUILD_REPOSITORY_URL:latest
+      - docker push $BUILD_REPOSITORY_URL:$BUILD_IMAGE_TAG
+      - printf '[{"name":"%s","imageUri":"%s"}]' ${BUILD_REPOSITORY_NAME} $BUILD_REPOSITORY_URL:$BUILD_IMAGE_TAG > imagedefinitions.json
 artifacts:
   files: imagedefinitions.json
