@@ -20,7 +20,8 @@ func GetProductToSendSql(lastExec string) string {
        '{' || LISTAGG(attributes, ', ') WITHIN GROUP (ORDER BY product_sku) || '}' AS "ATTRIBUTES",
        media,
        created_at,
-       updated_at
+       updated_at,
+       sync
 FROM (
          SELECT DISTINCT cp.PRODUCT_SKU                                                  AS product_sku,
                          cp.PRODUCT_SKU_PARENT                                           AS product_sku_parent,
@@ -37,7 +38,8 @@ FROM (
                          cp.LAST_DATE                                                    AS updated_at,
                          COALESCE('"' || cpa.NAME || '": "' || cpa.VALUE || '"', 'NULL') AS attributes,
                          '[{"thumbnail": "' || cp.THUMBNAIL || '" }, { "full_image": "' || cp.FULLIMAGE ||
-                         '"}]'                                                           AS media
+                         '"}]'                                                           AS media,
+                         cp.SYNC 														                             AS sync
          FROM CON_PRODUCTS cp
                   INNER JOIN CON_PRODUCT_ATTRIBUTE cpa ON cpa.PRODUCT_SKU = cp.PRODUCT_SKU
                   LEFT OUTER JOIN CON_OFFERS co ON co.CON_PRODUCT_PRODUCT_SKU = cp.PRODUCT_SKU
@@ -59,7 +61,8 @@ FROM (
                   cpa.NAME,
                   cpa.PARTNUMBER,
                   cpa.VALUE,
-                  cp.CREATE_DATE
+                  cp.CREATE_DATE,
+                  cp.SYNC
      )
 GROUP BY product_sku,
          product_sku_parent,
@@ -74,7 +77,8 @@ GROUP BY product_sku,
          part_number,
          created_at,
          updated_at,
-         media`, lastExec)
+         media,
+ 		     sync`, lastExec)
 
   return slq
 }

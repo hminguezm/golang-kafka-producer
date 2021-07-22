@@ -6,6 +6,6 @@ import (
 
 type RegisterGetLastedDTO struct {
   ID        uuid.UUID `json:"id"`
-  CreatedAt string `json:"created_at"`
-  UpdatedAt string `json:"update_at"`
+  CreatedAt string    `json:"created_at"`
+  UpdatedAt string    `json:"updated_at"`
 }

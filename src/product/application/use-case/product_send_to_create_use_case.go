@@ -28,27 +28,25 @@ func (u *ProductSendToCreate) Do() ([]*entity.Product, error) {
   log.Debug("SendToCreate!")
 
   var register *dto.RegisterGetLastedDTO
-  register, err := u.registerRepository.GetLastRegister()
-  if err != nil {
-    return nil, err
-  }
+  register = u.registerRepository.GetLastRegister()
 
-  log.Info("register CreatedAt: %s: ", register.CreatedAt)
+  log.Info("Register created at: %s", register.CreatedAt)
   productsDB, err := u.productRepository.FindToCreate(register.CreatedAt)
   if nil != err {
     log.WithError(err).Fatal("error could not get product from db")
     os.Exit(0)
   }
 
-  log.Info("create new register")
-  if len(productsDB) == 0 {
-    log.Info("Could not found products")
+  log.Info("Create new register")
+  err = u.registerRepository.CreateRegister()
+  if err != nil {
+    log.Info("Could not create new register, %s", err)
     os.Exit(0)
   }
 
-  err = u.registerRepository.CreateRegister()
-  if err != nil {
-    return nil, err
+  if len(productsDB) == 0 {
+    log.Info("Could not found products")
+    os.Exit(0)
   }
 
   return productsDB, nil
