@@ -1,6 +1,34 @@
 {
-  "name": "wrk-connector",
-  "version": "0.0.1",
-  "repository": "git@bitbucket.org:ripleyx/wrk-connector.git",
-  "license": "MIT"
+  "name": "wrk-connector-producer",
+  "version": "1.0.0",
+  "description": "A Goland published.",
+  "author": "HECTOR MINGUEZ",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@bitbucket.org:ripleyx/wrk-connector-producer.git"
+  },
+  "keywords": [
+    "db-connector",
+    "mirakl-operation",
+    "pub-sub",
+    "oracle"
+  ],
+  "devDependencies": {
+    "husky": "^6.0.0",
+    "nodemon": "^2.0.7"
+  },
+  "scripts": {
+    "start:dev": "nodemon --watch 'src/**/*.go' --ignore 'src/**/*_[test]?$.ts' --exec go run src/main.go",
+    "start:dev:full": "",
+    "start": "",
+    "lint": "gofmt -l -s -w .",
+    "test": ""
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn run lint",
+      "pre-push": ""
+    }
+  }
 }
