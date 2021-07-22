@@ -24,13 +24,11 @@ func NewProductSendToCreateQueue(productSendToCreate _interface.ProductSendToCre
   }
 }
 
-
 var (
   maxLen, _ = strconv.Atoi(os.Getenv("KAFKA_PAYLOAD_MESSAGE_MAX_LENGTH"))
   message   []*entity.Product
   counter   = 0
 )
-
 
 func (u *ProductSendToCreateQueue) Do() ([]*entity.Product, error) {
   productsFromUseCase, err := u.productSendToCreate.Do()
@@ -49,7 +47,7 @@ func (u *ProductSendToCreateQueue) Do() ([]*entity.Product, error) {
     message = append(message, value)
     if math.Abs(float64(counter-key)) == (float64(maxLen)) {
       m := service.MessageGenerator(
-        constant.EventName["PRODUCTS_CREATED"],
+        constant.EventName["PRODUCT_CREATED"],
         constant.EventDataFormat["JSON"],
         constant.EventType["CREATE"],
         "1.0",
@@ -59,12 +57,11 @@ func (u *ProductSendToCreateQueue) Do() ([]*entity.Product, error) {
         "products": message,
       }
 
-      err = u.queue.Send(constant.KafkaTopics["TOPIC_PRODUCTS_CREATE"], m)
+      err = u.queue.Send(constant.KafkaTopics["TOPIC_PRODUCT_CREATE"], m)
       if err != nil {
         log.WithError(err).Error("error sending message")
 
         os.Exit(0)
-        return nil, err
       }
       chunkPos++
       counter = key
@@ -87,7 +84,6 @@ func (u *ProductSendToCreateQueue) Do() ([]*entity.Product, error) {
         log.WithError(err).Error("error sending message")
 
         os.Exit(0)
-        return nil, err
       }
       chunkPos++
       counter = key
@@ -95,5 +91,5 @@ func (u *ProductSendToCreateQueue) Do() ([]*entity.Product, error) {
     }
   }
 
-    return nil, nil
-  }
+  return nil, nil
+}

@@ -54,21 +54,21 @@ func main() {
   producerMassage := kafka.NewKafkaProducer(
     kafka.GetDialer(),
     constant.KafkaBrokers...
-    )
+  )
 
   registerRepo := postgres.NewRegisterRepository(postgresConnect)
   productRepo := oracle.NewProductRepository(oracleConnect)
   sendToCreateProduct := useCase.NewProductSendToCreate(
     registerRepo, productRepo,
-    )
+  )
   sendToCreateProductQueue := useCase.NewProductSendToCreateQueue(
     sendToCreateProduct,
     producerMassage,
-    )
+  )
   go func() {
     _, err := sendToCreateProductQueue.Do()
     if err != nil {
-
+      log.Error("sendToCreateProductQueue error: %s", err)
     }
   }()
 

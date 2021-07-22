@@ -16,6 +16,7 @@ type Product struct {
   PartNumber       string    `json:"part_number"`
   Attributes       string    `json:"attributes"`
   Media            string    `json:"media"`
+  Sync             int       `json:"sync"`
   CreatedAt        time.Time `json:"created_at"`
   UpdatedAt        time.Time `json:"updated_at"`
 }

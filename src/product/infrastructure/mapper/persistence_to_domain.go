@@ -21,6 +21,7 @@ func MapProductFromDBResponse(data ...interface{}) *entity.Product {
   product.PartNumber = service.ConvertToString(data[constant.PartNumber])
   product.Attributes = service.ConvertToString(data[constant.Attributes])
   product.Media = service.ConvertToString(data[constant.Media])
+  product.Sync = service.ConvertToInt(data[constant.Sync])
   product.CreatedAt = service.ConvertToTime(data[constant.CreatedAt])
   product.UpdatedAt = service.ConvertToTime(data[constant.UpdatedAt])
 

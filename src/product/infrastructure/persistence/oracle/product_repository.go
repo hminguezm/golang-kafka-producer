@@ -32,6 +32,7 @@ func (r *ProductRepository) FindToCreate(dateExec string) ([]*entity.Product, er
 
   query := s.GetProductToSendSql(dateExec)
   dbProducts, err := oracleDatabase.ExecuteQuery(conn, query)
+
   if nil != err {
     log.WithError(err).Error("error executing products query")
     return nil, err

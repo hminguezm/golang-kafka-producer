@@ -6,5 +6,5 @@ import (
 
 type Register interface {
 	CreateRegister() error
-	GetLastRegister() (*dto.RegisterGetLastedDTO, error)
+	GetLastRegister() *dto.RegisterGetLastedDTO
 }

@@ -16,4 +16,5 @@ const (
   Media            = 12
   CreatedAt        = 13
   UpdatedAt        = 14
+  Sync             = 15
 )

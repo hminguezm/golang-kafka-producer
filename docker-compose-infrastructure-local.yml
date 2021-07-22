@@ -8,7 +8,7 @@ services:
     ports:
       - 2181:2181
     networks:
-      - kafka-network
+      - kafka
     environment:
       ZOO_MY_ID: 1
 
@@ -18,7 +18,7 @@ services:
     ports:
       - 9092:9092
     networks:
-      - kafka-network
+      - kafka
     environment:
       KAFKA_ADVERTISED_HOST_NAME: kafka
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
@@ -46,7 +46,7 @@ services:
       - 5432:5432
     networks:
       - default
-      - database-network
+      - database
 
 volumes:
   postgres:
@@ -54,10 +54,10 @@ volumes:
 networks:
   default:
     driver: bridge
-  database-network:
+  database:
     external:
-      name: database-network
-  kafka-network:
+      name: database
+  kafka:
     external:
-      name: kafka-network
+      name: kafka
 
