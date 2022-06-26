@@ -6,7 +6,7 @@ services:
     hostname: zookeeper
     restart: always
     ports:
-      - 2181:2181
+      - "2181:2181"
     networks:
       - kafka
     environment:
@@ -16,7 +16,7 @@ services:
     container_name: kafka
     image: wurstmeister/kafka
     ports:
-      - 9092:9092
+      - "9092:9092"
     networks:
       - kafka
     environment:
@@ -39,11 +39,11 @@ services:
     environment:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=db-conector-producer
+      - POSTGRES_DB=db-golang-kafka-producer
     volumes:
       - postgres:/var/lib/postgresql/data
     ports:
-      - 5432:5432
+      - "5432:5432"
     networks:
       - default
       - database

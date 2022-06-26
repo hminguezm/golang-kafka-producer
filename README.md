@@ -1,4 +1,4 @@
-~~~~# wrk-connector-producer
+~~~~# golang-kafka-producer
 
 A Goland published.
 

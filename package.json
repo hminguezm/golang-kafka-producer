@@ -1,12 +1,12 @@
 {
-  "name": "wrk-connector-producer",
+  "name": "golang-kafka-producer",
   "version": "1.0.0",
   "description": "A Goland published.",
   "author": "HECTOR MINGUEZ",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git@bitbucket.org:ripleyx/wrk-connector-producer.git"
+    "url": "git@github.com:hminguezm/golang-kafka-producer.git"
   },
   "keywords": [
     "db-connector",
